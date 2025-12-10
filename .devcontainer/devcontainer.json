@@ -23,7 +23,8 @@
 	
 	// Environment variables
 	"containerEnv": {
-		"AWS_CLI_AUTO_PROMPT": "on-partial"
+		"AWS_CLI_AUTO_PROMPT": "on-partial",
+		"AWS_ACCOUNT_ID": "549969920082"
 	},
 	
 	// VS Code extensions
