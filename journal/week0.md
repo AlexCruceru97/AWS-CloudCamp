@@ -8,3 +8,11 @@ Added in devcontainer.json the following:
 	},
   
 Environment variables can't be created using gp command, so instead added in project->edit->secrets->new secret and added as environment variables.
+
+Added AWS_ACCOUNT_ID also inside devcontainer.json to be able to add the budget alarm to the account.
+added 2 files, budget.json and budget-notifications-with-subscribers.json inside the new folder hierarchy AWS-CloudCamp/aws/json
+
+run the command -> aws budgets create-budget \
+    --account-id $AWS_ACCOUNT_ID \
+    --budget file://aws/json/budget.json \
+    --notifications-with-subscribers file://aws/json/budget-notifications-with-subscribers.json
