@@ -29,4 +29,6 @@ then use: aws sns subscribe \
     --protocol email \
     --notification-endpoint alex.ali49@yahoo.com
 
-to tell to what email to subscribe, with what topic, it will output the waits for confirmation on email. after confirming it will create a billing alarm in Amazon SNS, in topics tab.
+to tell to what email to subscribe, with what topic, it will output the waits for confirmation on email. after confirming it will create a billing alarm in Amazon SNS, in topics tab. This SNS topic will be use to send email triggered by an alarm.
+
+Next create an alarm in cloudwatch
