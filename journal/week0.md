@@ -69,3 +69,6 @@ Create new file inside aws/json, called alarm-config.json where following is add
     }]
 }
 Inside alarm actions is the sns topic created before. Next run the command aws cloudwatch put-metric-alarm --cli-input-json file://aws/json/alarm-config.json. Now in AWS, CloudWatch inside alarms, the alarm can be seen.
+
+Day2.
+Using IAM. I created an organization and added business units. Created an account, which I can use. For example If I am logged as an user I can switch to that account using switch Role from Account dropdown menu. There I pick the accountId I want to use. Only I as management account can switch freely between accounts.
