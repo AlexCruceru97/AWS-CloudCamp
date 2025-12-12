@@ -16,3 +16,17 @@ run the command -> aws budgets create-budget \
     --account-id $AWS_ACCOUNT_ID \
     --budget file://aws/json/budget.json \
     --notifications-with-subscribers file://aws/json/budget-notifications-with-subscribers.json
+
+
+Use SNS to subscribe to an email address
+first run: aws sns create-topi --name billing-alarm, it will outpout:
+{
+    "TopicArn": "arn:aws:sns:eu-central-1:549969920082:billing-alarm"
+}
+
+then use: aws sns subscribe \
+    --topic-arn arn:aws:sns:eu-central-1:549969920082:billing-alarm \
+    --protocol email \
+    --notification-endpoint alex.ali49@yahoo.com
+
+to tell to what email to subscribe, with what topic, it will output the waits for confirmation on email. after confirming it will create a billing alarm in Amazon SNS, in topics tab.
