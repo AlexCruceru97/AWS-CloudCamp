@@ -31,4 +31,41 @@ then use: aws sns subscribe \
 
 to tell to what email to subscribe, with what topic, it will output the waits for confirmation on email. after confirming it will create a billing alarm in Amazon SNS, in topics tab. This SNS topic will be use to send email triggered by an alarm.
 
-Next create an alarm in cloudwatch
+Next create an alarm in cloudwatch.
+Create new file inside aws/json, called alarm-config.json where following is added
+{
+    "AlarmName": "DailyEstimatedCharges",
+    "AlarmDescription": "This alarm would be triggered if the daily estimated charges exceeds 50$",
+    "ActionsEnabled": true,
+    "AlarmActions": [
+        "arn:aws:sns:eu-central-1:549969920082:billing-alarm"
+    ],
+    "EvaluationPeriods": 1,
+    "DatapointsToAlarm": 1,
+    "Threshold": 1,
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "TreatMissingData": "breaching",
+    "Metrics": [{
+        "Id": "m1",
+        "MetricStat": {
+            "Metric": {
+                "Namespace": "AWS/Billing",
+                "MetricName": "EstimatedCharges",
+                "Dimensions": [{
+                    "Name": "Currency",
+                    "Value": "USD"
+                }]
+            },
+            "Period": 86400,
+            "Stat": "Maximum"
+        },
+        "ReturnData": false
+    },
+    {
+        "Id": "e1",
+        "Expression": "IF(RATE(m1)>0,RATE(m1)*86400,0)",
+        "Label": "DailyEstimatedCharges",
+        "ReturnData": true
+    }]
+}
+Inside alarm actions is the sns topic created before. Next run the command aws cloudwatch put-metric-alarm --cli-input-json file://aws/json/alarm-config.json. Now in AWS, CloudWatch inside alarms, the alarm can be seen.
