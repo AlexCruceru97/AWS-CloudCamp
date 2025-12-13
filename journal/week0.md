@@ -72,3 +72,7 @@ Inside alarm actions is the sns topic created before. Next run the command aws c
 
 Day2.
 Using IAM. I created an organization and added business units. Created an account, which I can use. For example If I am logged as an user I can switch to that account using switch Role from Account dropdown menu. There I pick the accountId I want to use. Only I as management account can switch freely between accounts.
+
+Week0 Challenge: Created lucid chart <img width="1015" height="648" alt="image" src="https://github.com/user-attachments/assets/2039cf5e-ce6a-4685-a1e5-11878e90b755" />
+https://lucid.app/lucidchart/59a5e77e-2222-4860-84b5-b22a8aedf96b/edit?view_items=fNBdqczpR_lA&page=WlAdhe_n5xVt&invitationId=inv_df3efa31-e39c-4125-9a48-072ef04a1113
+
