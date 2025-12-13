@@ -3,13 +3,15 @@
 //
 // See https://aka.ms/devcontainer.json for more information.
 {
-	"name": "Ona",
+	"name": "BootCampProject",
 	// Use "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
 	// instead of the build to use a pre-built image.
-	"build": {
+
+	/*"build": {
         "context": ".",
         "dockerfile": "Dockerfile"
     },
+	*/
 	// Features add additional features to your environment. See https://containers.dev/features
 	// Beware: features are not supported on all platforms and may have unintended side-effects.
 	// "features": {
@@ -18,9 +20,12 @@
     //   }
     // }
 	
+	"image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
 	// Lifecycle scripts - run commands during container setup
-	"postCreateCommand": "cd /workspaces && curl \"https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip\" -o \"awscliv2.zip\" && unzip awscliv2.zip && sudo ./aws/install && cd /workspaces/AWS-CloudCamp",
+	//"postCreateCommand": "cd /workspaces && curl \"https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip\" -o \"awscliv2.zip\" && unzip awscliv2.zip && sudo ./aws/install && cd /workspaces/AWS-CloudCamp",
 	
+	"postCreateCommand": "curl 'https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip' -o 'awscliv2.zip' && unzip awscliv2.zip && sudo ./aws/install && rm -rf aws awscliv2.zip",
+
 	// Environment variables
 	"containerEnv": {
 		"AWS_CLI_AUTO_PROMPT": "on-partial",
@@ -31,8 +36,13 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"42Crunch.vscode-openapi"
+				"42Crunch.vscode-openapi",
+				"amazonwebservices.aws-toolkit-vscode"
 			]
 		}
-	}
+	},
+	// Mount your AWS credentials from host
+	"mounts": [
+        "source=${localEnv:USERPROFILE}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached"
+    ]
 }
