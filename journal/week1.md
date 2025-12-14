@@ -3,7 +3,8 @@
 ## Containterization
 Locally using docker I create an container called "BootCampProject"(name can be seen in devcontainer.json). Which will now will become my workspace/windows. Here I can launch other containers, for example container for flask application, databases etc.
 Using 
-``` "features": {
+```
+"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2":{} 
 	},
 ```
