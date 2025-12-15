@@ -163,9 +163,97 @@ Then run command docker-compose up, and access [port](http://localhost:3000/) wh
 
 # Home Challenges
 
-->Push and tag a image to DockerHub (they have a free tier)
--1.First create an docker hub account and a repository. My repository is "testrepository"
--2.run command ```docker images ``` to see what images you have. I locally I have image for the whole project, which I use to create a container where I run other containers.
--3. Tag the image like this ``` docker tag imageID AccountName/Respository:Tagname ```, for me would be something like this ```docker tag 91f8e1f54a8a alexcruceru/testrepository:vsc-aws-cloudcamp``` where 91f8e1f54a8a is the ID of the image, alexcruceru is the name of the account, testrepository the repository name, and vsc-aws-cloudcamp the tag I choose, which is the same as the image name, but can be anything else.
--4. push the image with the following command ``` docker push AccountName/Repository:Tagname ``` so for me would be ```docker push alexcruceru/testrepository:vsc-aws-cloudcamp```
--5. As I'm doing my project inside an container, the one I talked about previously "vsc-aws-cloudcamp" to push the frontend and backend images, I had to first start the container, then docker-compose up, and again doing same steps of ```docker images``` and then tagging and pushing the images
+## Challenge1 Push and tag a image to DockerHub (they have a free tier)
+- 1.First create an docker hub account and a repository. My repository is "testrepository"
+- 2.run command ```docker images ``` to see what images you have. I locally I have image for the whole project, which I use to create a container where I run other containers.
+- 3. Tag the image like this ``` docker tag imageID AccountName/Respository:Tagname ```, for me would be something like this ```docker tag 91f8e1f54a8a alexcruceru/testrepository:vsc-aws-cloudcamp``` where 91f8e1f54a8a is the ID of the image, alexcruceru is the name of the account, testrepository the repository name, and vsc-aws-cloudcamp the tag I choose, which is the same as the image name, but can be anything else.
+- 4. push the image with the following command ``` docker push AccountName/Repository:Tagname ``` so for me would be ```docker push alexcruceru/testrepository:vsc-aws-cloudcamp```
+- 5. As I'm doing my project inside an container, the one I talked about previously "vsc-aws-cloudcamp" to push the frontend and backend images, I had to first start the container, then docker-compose up, and again doing same steps of ```docker images``` and then tagging and pushing the images
+
+## Use multi-stage building for a Dockerfile build
+
+- For this, dockerfiles need to be modified as such:
+  ```
+  # STAGE 1
+  FROM python:3.10-slim-buster AS builder
+
+	# Set working directory (inside the container)
+	# make a new folder in the container called backend-flask
+	WORKDIR /backend-flask
+
+	# Install dependencies (from outside the container to inside the container)
+	COPY requirements.txt requirements.txt
+
+
+	# Install required packages(inside the container)
+	RUN pip install --no-cache-dir -r requirements.txt
+
+  	# STAGE 2
+  FROM python:3.10-slim-buster
+
+	# Set working directory (inside the container)
+	# make a new folder in the container called backend-flask
+	WORKDIR /backend-flask
+	
+	# Copy installed Python packages from builder stage
+	COPY --from=builder /usr/local /usr/local
+	
+	# Copy all files from the current directory (outside the container) to the working directory (inside the container)
+	# first . means everything from the current directory outside the container (/backend-flask)
+	# second . means copy to the working directory inside the container (/backend-flask)
+	COPY . .
+	
+	# set environment variables inside the container and remain set when the container is running
+	ENV FLASK_ENV=development
+	
+	EXPOSE ${PORT}
+	
+	# Command to run the application (inside the container)
+	# python3 -m flask run --host=0.0.0.0 --port=4567
+	CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0", "--port=4567"]
+
+  ```
+  frontend Docker:
+  ```
+  # 1st stage: 
+	FROM node:16.18 AS builder
+	
+	# Set working directory (inside the container)
+	WORKDIR /frontend-react-js
+	# Create working directory inside the container
+	COPY . /frontend-react-js
+	# Install dependencies (inside the container)
+	RUN npm install
+	
+	# 2nd stage: build the application
+	FROM node:16.18-slim
+	# Set default port environment variable
+	ENV PORT=3000
+	
+	# Set working directory (inside the container)
+	WORKDIR /frontend-react-js
+	
+	# Copy node_modules from builder stage
+	COPY --from=builder /frontend-react-js/node_modules ./node_modules
+	
+	#   Copy application source code from builder stage
+	COPY . .
+	
+	# Expose the port (inside the container)
+	EXPOSE ${PORT}
+	# Command to run the application (inside the container)
+	CMD ["npm", "start"]
+  ```
+Stage 1 is for bulding:
+
+- installing dependencies
+- compiling code
+- building artifacts
+- doing heavy or dirty work
+- Things that are needed to build, but not needed to run.
+Stage 2 is for runtime:
+- running the application
+- being small, clean, minimal
+- containing only what is required at runtime
+So only stage 2 exists after building the image, which results in a smaller image.
+
