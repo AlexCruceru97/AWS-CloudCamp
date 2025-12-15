@@ -70,3 +70,45 @@ and using
 docker run -p 3000:3000 -d frontend-react-js 
 ```
 will start a container based on the image created previously.
+
+Also can be done for backend-flask application
+Build a image from
+```
+#Docker file
+#create a docker image using python 3.10 slim buster as the base image
+#create another container only for the backend-flask application
+FROM python:3.10-slim-buster
+
+# Set working directory (inside the container)
+# make a new folder in the container called backend-flask
+WORKDIR /backend-flask
+
+# Install dependencies (from outside the container to inside the container)
+COPY requirements.txt requirements.txt
+
+# Install required packages(inside the container)
+RUN pip3 install -r requirements.txt
+
+# Copy all files from the current directory (outside the container) to the working directory (inside the container)
+# first . means everything from the current directory outside the container (/backend-flask)
+# second . means copy to the working directory inside the container (/backend-flask)
+COPY . .
+
+# set environment variables inside the container and remain set when the container is running
+ENV FLASK_ENV=development
+
+EXPOSE ${PORT}
+
+# Command to run the application (inside the container)
+# python3 -m flask run --host=0.0.0.0 --port=4567
+CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0", "--port=4567"]
+```
+using 
+```
+build -t backend-flask ./backend-flask
+```
+and run the container from that image using:
+```
+docker run --rm -p 4567:4567 -it -e FRONTEND_URL="*" -e BACKEND_URL="*" backend-flask
+```
+and access the backend-page using http://localhost:4567/api/activities/home
