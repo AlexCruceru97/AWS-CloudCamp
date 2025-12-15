@@ -112,3 +112,51 @@ and run the container from that image using:
 docker run --rm -p 4567:4567 -it -e FRONTEND_URL="*" -e BACKEND_URL="*" backend-flask
 ```
 and access the backend-page using http://localhost:4567/api/activities/home
+
+Using docker-compose.yml 
+```
+version: "3.8"
+services:
+  backend-flask:
+    environment:
+      #frontend url is where the frontend is hosted
+      FRONTEND_URL: "http://localhost:3000"
+      #backend url is where the backend is hosted
+      BACKEND_URL: "http://localhost:4567"
+    #this is the path to the Dockerfile  
+    build: ./backend-flask
+    # the ports mapping from host to container allowing access to the backend from outside the container
+    ports:
+      - "4567:4567"
+    # this is the path mapping from host to container, more precisely from local machine to the docker container
+    volumes:
+      - ./backend-flask:/backend-flask
+    # this is the network the container will use to communicate with other containers 
+    networks:
+      - internal-network
+  #this is the frontend service using react js
+  frontend-react-js:
+    #the environment variable to point to the backend service
+    environment:
+      REACT_APP_BACKEND_URL: "http://localhost:4567"
+    #this is the path to the Dockerfile holding the instructions to build the image
+    build: ./frontend-react-js
+    # the ports mapping from host to container so we can access the frontend from outside the container
+    ports:
+      - "3000:3000"
+    # this is the path mapping from host to container, more precisely from local machine to the docker container
+    volumes:
+      - ./frontend-react-js:/frontend-react-js
+    # this is the network the container will use to communicate with other containers
+    networks:
+      - internal-network
+
+#the name flag is a hack to change the default prepend folder name when outpulling image names
+# this is useful for CI/CD pipelines
+networks:
+  internal-network:
+    driver: bridge
+    name: cruddur
+```
+we can run multiple containers at the same time.
+Then run command docker-compose up, and access [port](http://localhost:3000/) where will have this, which show that backend is connected to frontend <img width="1474" height="839" alt="image" src="https://github.com/user-attachments/assets/a4ac1183-7c65-4a78-b45d-fe1383238ba4" />
