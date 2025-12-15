@@ -160,3 +160,10 @@ networks:
 ```
 we can run multiple containers at the same time.
 Then run command docker-compose up, and access [port](http://localhost:3000/) where will have this, which show that backend is connected to frontend <img width="1474" height="839" alt="image" src="https://github.com/user-attachments/assets/a4ac1183-7c65-4a78-b45d-fe1383238ba4" />
+
+#Home Challenges
+->Push and tag a image to DockerHub (they have a free tier)
+1.First create an docker hub account and a repository. My repository is "testrepository"
+2.run command ```docker images ``` to see what images you have. I locally I have image for the whole project, which I use to create a container where I run other containers.
+3. Tag the image like this ``` docker tag imageID AccountName/Respository:Tagname ```, for me would be something like this ```docker tag 91f8e1f54a8a alexcruceru/testrepository:vsc-aws-cloudcamp``` where 91f8e1f54a8a is the ID of the image, alexcruceru is the name of the account, testrepository the repository name, and vsc-aws-cloudcamp the tag I choose, which is the same as the image name, but can be anything else.
+4. push the image with the following command ``` docker push AccountName/Repository:Tagname ``` so for me would be ```docker push alexcruceru/testrepository:vsc-aws-cloudcamp```
