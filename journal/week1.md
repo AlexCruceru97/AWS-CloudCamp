@@ -161,7 +161,8 @@ networks:
 we can run multiple containers at the same time.
 Then run command docker-compose up, and access [port](http://localhost:3000/) where will have this, which show that backend is connected to frontend <img width="1474" height="839" alt="image" src="https://github.com/user-attachments/assets/a4ac1183-7c65-4a78-b45d-fe1383238ba4" />
 
-#Home Challenges
+###Home Challenges
+
 ->Push and tag a image to DockerHub (they have a free tier)
 1.First create an docker hub account and a repository. My repository is "testrepository"
 2.run command ```docker images ``` to see what images you have. I locally I have image for the whole project, which I use to create a container where I run other containers.
