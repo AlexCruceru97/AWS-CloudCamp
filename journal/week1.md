@@ -257,3 +257,9 @@ Stage 2 is for runtime:
 - containing only what is required at runtime
 So only stage 2 exists after building the image, which results in a smaller image.
 
+### Health checks added to multistage version
+- Created a new breanch "docker_multistage"
+- Had some trouble. As frontend has dependency of backend to be healthy, found out that my backend was unhealthy. The cause was found using ``` docker insepct *containerid* ``` and then searching for health, where shows health logs, and there says that curl was not found So I had to install it because my test use the curl command
+- Initialy installed in first stage of the docker file and this would still  show the container as unhealthy, fixed by moving to second stage. Also used different images as base, because if used slim in first stage and simple in second, would have some debian issue.
+- For frontend added initialy healthchecks and also installed the curl, but seems to be issue with the slim image because slim images remove a lot of Debian infrastructure. Removed that check because React dev server already crashes if it can’t start, Docker already knows if the container is running, This healthcheck adds almost no value.
+- Also found that if checks are going ok, when using docker ps, it will shows the status as healthy, but if a check fail, will show it as health:starting untill finishes all checks.
