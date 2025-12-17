@@ -1,0 +1,35 @@
+# Ignore local node_modules because the builder stage will install them inside Docker
+# This prevents sending potentially hundreds of MB of files to the Docker daemon
+node_modules
+npm-debug.log
+dist
+
+# Ignore build/dist output, because we will build it inside the container
+# No need to send local build artifacts
+build
+dist
+
+# Version control files are not needed inside the image
+.git
+.gitignore
+
+
+# OS temp files and editor-specific files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode
+
+# Logs and temporary files
+yarn-debug.log
+yarn-error.log
+
+# Local virtual environment, dependencies will be installed in builder stage
+.env
+.env.*
+.env.local
+
+# OS-specific files
+.DS_Store
+Thumbs.db

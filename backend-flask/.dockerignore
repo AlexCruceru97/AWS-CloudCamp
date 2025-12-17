@@ -1,0 +1,28 @@
+# Python cache files, not needed in image
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local virtual environment, dependencies will be installed in builder stage
+.env
+.env.*
+.env.local
+venv/
+env/
+
+# Database and log files, usually local and should not be in the image
+*.db
+*.sqlite3
+*.log
+
+# Version control files
+.git
+.gitignore
+
+#IDE and editor files
+.vscode
+
+# OS-specific files
+.DS_Store
+Thumbs.db
