@@ -6,6 +6,8 @@ services:
       FRONTEND_URL: "http://localhost:3000"
       #backend url is where the backend is hosted
       BACKEND_URL: "http://localhost:4567"
+    #the name of the image to be created 
+    image: backend-flask-image
     #this is the path to the Dockerfile  
     build: ./backend-flask
     # the ports mapping from host to container allowing access to the backend from outside the container
@@ -17,11 +19,25 @@ services:
     # this is the network the container will use to communicate with other containers 
     networks:
       - internal-network
+    healthcheck:
+      # use curl to hit an endpoit; -f flag makes curl fail on HTTP errors; || exit 1 returns error code if curl fails
+      test: ["CMD-SHELL", "curl -f http://localhost:4567/api/activities/home || exit 1"]
+      # how often to run the health check
+      interval: 15s
+      # how long to wait for the health check to complete - fail if check takes longer than 10 seconds
+      timeout: 10s
+      # how many times to retry before marking as unhealthy
+      retries: 2
+      # grace period before starting health checks(for slow startups) - wait 40s before first check
+      start_period: 40s
+    
   #this is the frontend service using react js
   frontend-react-js:
     #the environment variable to point to the backend service
     environment:
       REACT_APP_BACKEND_URL: "http://localhost:4567"
+    #the name of the image to be created
+    image: frontend-react-js-image
     #this is the path to the Dockerfile holding the instructions to build the image
     build: ./frontend-react-js
     # the ports mapping from host to container so we can access the frontend from outside the container
@@ -33,6 +49,9 @@ services:
     # this is the network the container will use to communicate with other containers
     networks:
       - internal-network
+    depends_on:
+      backend-flask:
+        condition: service_healthy # wait for the backend to be HEALTHY not just started
 
 #the name flag is a hack to change the default prepend folder name when outpulling image names
 # this is useful for CI/CD pipelines

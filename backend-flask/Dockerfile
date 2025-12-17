@@ -1,6 +1,6 @@
 #create a docker image using python 3.10 slim buster as the base image
 #create another container only for the backend-flask application
-FROM python:3.10-slim-buster
+FROM python:3.10-slim AS builder
 
 # Set working directory (inside the container)
 # make a new folder in the container called backend-flask
@@ -9,8 +9,20 @@ WORKDIR /backend-flask
 # Install dependencies (from outside the container to inside the container)
 COPY requirements.txt requirements.txt
 
+
 # Install required packages(inside the container)
-RUN pip3 install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+# Install curl for healthcheck
+
+# 2nd stage: create the final image
+FROM python:3.10-slim
+
+# Set working directory (inside the container)
+# make a new folder in the container called backend-flask
+WORKDIR /backend-flask
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+# Copy installed Python packages from builder stage
+COPY --from=builder /usr/local /usr/local
 
 # Copy all files from the current directory (outside the container) to the working directory (inside the container)
 # first . means everything from the current directory outside the container (/backend-flask)
