@@ -22,7 +22,8 @@ ENV PORT=3000
 WORKDIR /frontend-react-js
 # Copy node_modules from builder stage
 COPY --from=builder /frontend-react-js/node_modules ./node_modules
-
+#Copy the rest of the code (including package.json) from builder
+COPY --from=builder /frontend-react-js .
 
 
 # Expose the port (inside the container)

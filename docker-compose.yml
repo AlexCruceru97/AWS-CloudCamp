@@ -3,9 +3,9 @@ services:
   backend-flask:
     environment:
       #frontend url is where the frontend is hosted
-      FRONTEND_URL: "http://localhost:3000"
+      FRONTEND_URL: "http://3.236.252.21:3000"
       #backend url is where the backend is hosted
-      BACKEND_URL: "http://localhost:4567"
+      BACKEND_URL: "http://3.236.252.21:4567"
     #the name of the image to be created 
     image: backend-flask-image
     #this is the path to the Dockerfile  
@@ -13,9 +13,6 @@ services:
     # the ports mapping from host to container allowing access to the backend from outside the container
     ports:
       - "4567:4567"
-    # this is the path mapping from host to container, more precisely from local machine to the docker container
-    volumes:
-      - ./backend-flask:/backend-flask
     # this is the network the container will use to communicate with other containers 
     networks:
       - internal-network
@@ -35,7 +32,7 @@ services:
   frontend-react-js:
     #the environment variable to point to the backend service
     environment:
-      REACT_APP_BACKEND_URL: "http://localhost:4567"
+      REACT_APP_BACKEND_URL: "http://3.236.252.21:4567"
     #the name of the image to be created
     image: frontend-react-js-image
     #this is the path to the Dockerfile holding the instructions to build the image
@@ -43,9 +40,6 @@ services:
     # the ports mapping from host to container so we can access the frontend from outside the container
     ports:
       - "3000:3000"
-    # this is the path mapping from host to container, more precisely from local machine to the docker container
-    volumes:
-      - ./frontend-react-js:/frontend-react-js
     # this is the network the container will use to communicate with other containers
     networks:
       - internal-network
